@@ -1,32 +1,55 @@
+const bcrypt = require('bcrypt');
 const UserModel = require("../Models/User");
 
-const signup = async (req,res) => {
-    try{
-        const{name,email,passowrd}=req.body;
-        const user= await UserModel.findOne({email});
-        if (user){
-            return res.status(400)
-            .json({message:'User already exist,you can log in',success:false})
+const signup = async (req, res) => {
+    try {
+        const { name, email, password } = req.body;
+        const user = await UserModel.findOne({ email });
+        if (user) {
+            return res.status(409)
+                .json({ message: 'User is already exist, you can login', success: false });
         }
-        const UserModel=new UserModel({name,email,password});
-        UserModel.passowrd = await bcrypt.hasj(passowrd,10);
-        await UserModel.save();
+        const userModel = new UserModel({ name, email, password });
+        userModel.password = await bcrypt.hash(password, 10);
+        await userModel.save();
         res.status(201)
-                .json({
-                message:"Signup successfull",
+            .json({
+                message: "Signup successfully",
                 success: true
-                })
-
-    }catch(err){
+            })
+    } catch (err) {
         res.status(500)
-        .json({
-            message:"Internal server error",
-            success: false
-        })
-
+            .json({
+                message: "Internal server errror",
+                success: false
+            })
     }
 }
 
+const login = async (req, res) => {
+    try {
+        const { name, email, password } = req.body;
+        const user = await UserModel.findOne({ email });
+        if (user) {
+            return res.status(409)
+                .json({ message: 'User is already exist, you can login', success: false });
+        }
+        const userModel = new UserModel({ name, email, password });
+        userModel.password = await bcrypt.hash(password, 10);
+        await userModel.save();
+        res.status(201)
+            .json({
+                message: "Signup successfully",
+                success: true
+            })
+    } catch (err) {
+        res.status(500)
+            .json({
+                message: "Internal server errror",
+                success: false
+            })
+    }
+}
 module.exports={
     signup
 }
