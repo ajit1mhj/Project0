@@ -1,22 +1,24 @@
 const express = require('express');
 const app = express();
-const bodyparser = require('body-parser');
+const bodyParser = require('body-parser');
 const cors = require('cors');
-const AuthRouter = require('../Routes/ProductRouter')
+const AuthRouter = require('./Routes/AuthRouter');
+const ProductRouter = require('./Routes/ProductRouter');
+
 require('dotenv').config();
 require('./Models/db');
 const PORT = process.env.PORT || 8080;
 
-app.get('/ping',(req,res)=>{
+app.get('/ping', (req, res) => {
     res.send('PONG');
 });
 
-app.use(bodyparser.json());
-app.use(cors())
-app.use('/auth',AuthRouter)
-app.use('/product',ProductRouter)
+app.use(bodyParser.json());
+app.use(cors());
+app.use('/auth', AuthRouter);
+app.use('/products', ProductRouter);
 
 
-app.listen(PORT,()=>{
+app.listen(PORT, () => {
     console.log(`Server is running on ${PORT}`)
 })
